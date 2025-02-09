@@ -1,50 +1,127 @@
-import express, { Request, Response } from "express";
-import { existsSync, readFileSync, writeFileSync, watch } from "fs";
+import express, { Request, Response, Router } from "express";
+import { existsSync, readFileSync, writeFileSync, watch, FSWatcher } from "fs";
 import path from "path";
 
-const router = express.Router();
+// Extend the Router type to include our cleanup method
+interface SourcesRouter extends Router {
+  cleanup: () => void;
+  reset: () => Promise<void>;
+}
+
+const router = express.Router() as SourcesRouter;
 
 // Optional configuration: external file for storing sources
-const sourcesFilePath = process.env.SOURCES_FILE_PATH || "";
+const getSourcesFilePath = () => process.env.SOURCES_FILE_PATH || "";
+
+// Store the file watcher instance
+let fileWatcher: FSWatcher | null = null;
+
+// Initialize sources array
+let sources: Array<any> = [];
 
 // Function to load sources from the external file if provided
-function loadSources() {
-  if (sourcesFilePath && existsSync(sourcesFilePath)) {
-    try {
-      const data = readFileSync(sourcesFilePath, "utf-8");
-      return JSON.parse(data);
-    } catch (error) {
-      console.error("Error parsing sources file:", error);
-      return [];
-    }
+function loadSources(): Array<any> {
+  const sourcesFilePath = getSourcesFilePath();
+  console.log("Loading sources from:", sourcesFilePath);
+  console.log("File exists:", sourcesFilePath && existsSync(sourcesFilePath));
+
+  if (!sourcesFilePath || !existsSync(sourcesFilePath)) {
+    console.log("No sources file found, returning empty array");
+    sources = [];
+    return sources;
   }
-  return [];
+
+  try {
+    const data = readFileSync(sourcesFilePath, "utf-8");
+    console.log("Read file contents:", data);
+    const parsedSources = JSON.parse(data);
+    sources = Array.isArray(parsedSources) ? parsedSources : [];
+    console.log("Loaded sources:", sources);
+  } catch (error) {
+    console.error("Error parsing sources file:", error);
+    sources = [];
+  }
+
+  return sources;
 }
 
 // Function to save sources to the external file if provided
-function saveSources(sources: any[]) {
-  if (sourcesFilePath) {
-    try {
-      writeFileSync(sourcesFilePath, JSON.stringify(sources, null, 2));
-    } catch (error) {
-      console.error("Error writing to sources file:", error);
-    }
+function saveSources(newSources: any[]): void {
+  const sourcesFilePath = getSourcesFilePath();
+  console.log("Saving sources:", newSources);
+  console.log("To file:", sourcesFilePath);
+
+  sources = [...newSources];
+
+  if (!sourcesFilePath) {
+    console.log("No sources file path set, skipping save");
+    return;
+  }
+
+  try {
+    writeFileSync(sourcesFilePath, JSON.stringify(sources, null, 2), "utf-8");
+    console.log("Successfully wrote to file");
+  } catch (error) {
+    console.error("Error writing to sources file:", error);
   }
 }
 
-// Initialize sources - either from file or an in-memory empty array
-let sources: Array<any> = loadSources();
+// Function to setup file watching
+function setupFileWatcher() {
+  const sourcesFilePath = getSourcesFilePath();
+  console.log("Setting up file watcher for:", sourcesFilePath);
 
-// Watch the external sources file for changes and reload sources
-if (sourcesFilePath) {
-  watch(sourcesFilePath, (eventType, filename) => {
-    if (eventType === "change") {
-      console.log(
-        `Sources file changed. Reloading sources from ${sourcesFilePath}.`
-      );
-      sources = loadSources();
-    }
-  });
+  if (!sourcesFilePath || fileWatcher) {
+    console.log(
+      "Skipping file watcher setup:",
+      !sourcesFilePath ? "no file path" : "watcher exists"
+    );
+    return;
+  }
+
+  try {
+    fileWatcher = watch(sourcesFilePath, (eventType, filename) => {
+      console.log("File change detected:", eventType, filename);
+      if (eventType === "change") {
+        console.log(
+          `Sources file changed. Reloading sources from ${sourcesFilePath}.`
+        );
+        loadSources();
+      }
+    });
+    // Ensure the watcher is properly cleaned up
+    fileWatcher.unref();
+    console.log("File watcher setup complete");
+  } catch (error) {
+    console.error("Error setting up file watcher:", error);
+  }
+}
+
+// Function to cleanup file watching
+function cleanupFileWatcher() {
+  console.log("Cleaning up file watcher");
+
+  if (!fileWatcher) {
+    console.log("No file watcher to clean up");
+    return;
+  }
+
+  try {
+    fileWatcher.close();
+    console.log("File watcher closed");
+  } catch (error) {
+    console.error("Error closing file watcher:", error);
+  }
+  fileWatcher = null;
+}
+
+// Function to reset the state (for testing)
+async function resetState(): Promise<void> {
+  console.log("Resetting state");
+  cleanupFileWatcher();
+  sources = loadSources();
+  setupFileWatcher();
+  console.log("Reset complete, current sources:", sources);
 }
 
 // GET /sources: Retrieve all sources
@@ -55,13 +132,12 @@ router.get("/", (req: Request, res: Response) => {
 // POST /sources: Add a new source
 router.post("/", (req: Request, res: Response) => {
   const newSource = req.body;
-  // For simplicity, require an 'id' property in newSource
   if (!newSource.id) {
     res.status(400).json({ message: "Source must have an id" });
     return;
   }
-  sources.push(newSource);
-  saveSources(sources);
+  const newSources = [...sources, newSource];
+  saveSources(newSources);
   res.status(201).json({ message: "Source added", source: newSource });
 });
 
@@ -74,9 +150,10 @@ router.put("/:id", (req: Request, res: Response) => {
     res.status(404).json({ message: "Source not found" });
     return;
   }
-  sources[index] = { ...sources[index], ...updatedSource };
-  saveSources(sources);
-  res.json({ message: "Source updated", source: sources[index] });
+  const newSources = [...sources];
+  newSources[index] = { ...sources[index], ...updatedSource };
+  saveSources(newSources);
+  res.json({ message: "Source updated", source: newSources[index] });
 });
 
 // DELETE /sources/:id: Remove a source
@@ -87,9 +164,18 @@ router.delete("/:id", (req: Request, res: Response) => {
     res.status(404).json({ message: "Source not found" });
     return;
   }
-  const removed = sources.splice(index, 1);
-  saveSources(sources);
-  res.json({ message: "Source removed", source: removed[0] });
+  const newSources = [...sources];
+  const [removed] = newSources.splice(index, 1);
+  saveSources(newSources);
+  res.json({ message: "Source removed", source: removed });
 });
+
+// Cleanup function for the router
+router.cleanup = cleanupFileWatcher;
+router.reset = resetState;
+
+// Initial setup
+setupFileWatcher();
+loadSources();
 
 export default router;

@@ -32,11 +32,14 @@ describe("DatabaseManager", () => {
   describe("CRUD operations", () => {
     const testRule: Rule = {
       id: "test-rule-1",
+      name: "Test Rule",
       type: "typescript-style",
       description: "Test rule for TypeScript",
       tags: ["typescript", "style"],
       priority: 1,
       content: "Test rule content",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     it("should create a new rule", async () => {
@@ -89,11 +92,14 @@ describe("DatabaseManager", () => {
   describe("error handling", () => {
     const testRule: Rule = {
       id: "test-rule-1",
+      name: "Test Rule",
       type: "typescript-style",
       description: "Test rule for TypeScript",
       tags: ["typescript", "style"],
       priority: 1,
       content: "Test rule content",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     it("should throw error when creating rule with duplicate id", async () => {

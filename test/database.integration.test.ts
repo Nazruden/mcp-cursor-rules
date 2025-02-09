@@ -11,11 +11,14 @@ describe("DatabaseManager Integration Tests", () => {
 
   const testRule: Rule = {
     id: "integration-test-rule",
+    name: "Integration Test Rule",
     type: "typescript-style",
     description: "Integration test rule",
     tags: ["test", "integration"],
     priority: 1,
     content: "Test rule content",
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   beforeEach(() => {
@@ -132,8 +135,14 @@ describe("DatabaseManager Integration Tests", () => {
     it("should handle edge cases with optional fields", async () => {
       const minimalRule: Rule = {
         id: "minimal-rule",
+        name: "Minimal Rule",
         type: "test",
+        description: "A minimal test rule",
+        tags: [],
+        priority: 999,
         content: "Minimal content",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       await dbManager.createRule(minimalRule);

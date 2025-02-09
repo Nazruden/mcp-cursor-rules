@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 build/
+build-test/
+dist/
 
 # Coverage directory from tests
 coverage/
@@ -24,4 +26,17 @@ Thumbs.db
 
 # Temporary files
 *.swp
-*.swo 
+*.swo
+
+# TypeScript generated files
+# Ignore .js files in directories with .ts files
+**/*.ts.js
+**/*.ts.js.map
+# Ignore .js files in test directory (they are generated from .ts)
+test/**/*.js
+test/**/*.js.map
+
+# But allow specific JS files that are not generated
+!jest.config.js
+!.eslintrc.js
+!*.config.js 
