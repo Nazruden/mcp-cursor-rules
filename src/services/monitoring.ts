@@ -4,7 +4,7 @@
 export interface Metric {
   name: string;
   value: number;
-  timestamp: Date;
+  timestamp: Date | string;
   tags?: Record<string, string>;
 }
 
@@ -34,7 +34,13 @@ export class MonitoringService {
    * @param metric The metric to record
    */
   public recordMetric(metric: Metric): void {
-    this.metrics.push({ ...metric });
+    this.metrics.push({
+      ...metric,
+      timestamp:
+        metric.timestamp instanceof Date
+          ? metric.timestamp
+          : new Date(metric.timestamp),
+    });
   }
 
   /**
