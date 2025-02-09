@@ -8,7 +8,7 @@
 
 ## Status
 
-Draft
+Complete
 
 ## Context
 
@@ -20,28 +20,33 @@ Story Points: 3
 
 ## Acceptance Criteria
 
-1. - [ ] The system provides REST API endpoints for managing git repository sources for rule files.
-2. - [ ] The system supports configuration to include a local directory as a source for rule files.
-3. - [ ] When importing rules from a project, the metadata header is removed so that only the rule content is stored.
-4. - [ ] Unit tests achieve at least 80% coverage for the new functionalities.
-5. - [ ] The system supports an optional configuration to specify a file path for storing repository/folder sources at server launch. When specified, the server should load, manage, and allow runtime editing of the sources file.
+1. - [x] The system provides REST API endpoints for managing git repository sources for rule files.
+2. - [x] The system supports configuration to include a local directory as a source for rule files.
+3. - [x] When importing rules from a project, the metadata header is removed so that only the rule content is stored.
+4. - [x] Unit tests achieve at least 80% coverage for the new functionalities.
+5. - [x] The system supports an optional configuration to specify a file path for storing repository/folder sources at server launch. When specified, the server should load, manage, and allow runtime editing of the sources file.
 
 ## Subtasks
 
-1. - [ ] Design and implement REST API endpoints for managing git repository sources.
-   1. - [ ] Create endpoint for adding a git repository.
-   2. - [ ] Create endpoint for listing/managing git repository sources.
-   3. - [ ] Create endpoints for updating and removing git repository settings.
-2. - [ ] Develop configuration endpoints or file system watchers to support local drive storage.
-   1. - [ ] Implement configuration for specifying a local directory as a source for rule files.
-   2. - [ ] Develop a file system watcher to detect changes in local rule files.
-   3. - [ ] Implement logic to import rule files and strip out metadata headers.
-3. - [ ] Write comprehensive unit tests to ensure a minimum of 80% coverage.
-4. - [ ] Update documentation to reflect new endpoints and functionality.
-5. - [ ] Add functionality to support storing repository/folder sources in an external configuration file:
-   1. - [ ] Implement a configuration parameter to specify the file path for sources at server launch.
-   2. - [ ] Implement logic to load sources from the specified file during startup and persist changes at runtime.
-   3. - [ ] Ensure the system monitors and applies updates from the file when edited.
+1. - [x] Design and implement REST API endpoints for managing git repository sources.
+
+   1. - [x] Create endpoint for adding a git repository.
+   2. - [x] Create endpoint for listing/managing git repository sources.
+   3. - [x] Create endpoints for updating and removing git repository settings.
+
+2. - [x] Develop configuration endpoints or file system watchers to support local drive storage.
+
+   1. - [x] Implement configuration for specifying a local directory as a source for rule files.
+   2. - [x] Develop a file system watcher to detect changes in local rule files.
+   3. - [x] Implement logic to import rule files and strip out metadata headers.
+
+3. - [x] Write comprehensive unit tests to ensure a minimum of 80% coverage.
+4. - [x] Update documentation to reflect new endpoints and functionality.
+5. - [x] Add functionality to support storing repository/folder sources in an external configuration file:
+
+   1. - [x] Implement a configuration parameter to specify the file path for sources at server launch.
+   2. - [x] Implement logic to load sources from the specified file during startup and persist changes at runtime.
+   3. - [x] Ensure the system monitors and applies updates from the file when edited.
 
 ## Constraints
 

@@ -47,5 +47,6 @@ Always refer to me as "Nazruden" (or occasionally "Nazru" or "Naz").
 YOU DO NOT NEED TO ASK to:
 
 1. Creating the story file to be worked on next if none exist.
-2. Run unit Tests during the development process until they pass.
-3. Update the story AC and tasks as they are completed.
+2. Implement any Tests or benchmarks during the development process.
+3. Run unit Tests during the development process until they pass.
+4. Update the story AC and tasks as they are completed.
