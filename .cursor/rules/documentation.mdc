@@ -1,0 +1,13 @@
+---
+description: Provides rules to use when writing documentation files (any markdown files - md, rmd, mdc ...). It answers questions about doc writing style and manner.
+globs: **/*.md, docs/*.*, .ai/prd.md
+---
+# Doc Rules
+
+- Follow Google's Technical Writing Style Guide.
+- Define terminology when needed
+- Use present tense and active voice
+- Write in a clear and concise manner
+- Present information in a logical order
+- Use lists and tables when appropriate
+- Use Mermaid diagrams when appropriate

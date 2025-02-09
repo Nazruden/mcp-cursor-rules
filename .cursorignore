@@ -1,0 +1,5 @@
+/node_modules
+/build
+/temp
+.DS_STORE
+.ai/.cline.md

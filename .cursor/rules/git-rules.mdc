@@ -1,0 +1,12 @@
+---
+description: Provides rules to help the AI with git operations - Answers questions like "How should commits be delivered ?" "What git tools should I use ?"
+globs: 
+---
+# Git Rules
+
+- Make the head / title of the commit message brief
+- Include elaborate details in the body of the commit message
+- Always follow the conventional commit message format
+- Add two newlines after the commit message title
+- Unless specified otherwise - use `git add .`
+- Use the relevant MCP tools for git

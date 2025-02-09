@@ -1,0 +1,24 @@
+---
+description: Provides information and rules about Model Context Protocol (MCP) servers development - Answers questions like "What are the standards for MCP servers development ?" "How should I structure an MCP server project ?"
+globs: *.ts, *.md
+---
+
+# Model Context Protocol basics
+
+You can find a great starting point to understand the base principle of MCP servers here : https://modelcontextprotocol.io/introduction 
+
+# Server Quickstart
+
+You can find a quickstart guide for the server development here : https://modelcontextprotocol.io/quickstart/server
+
+# Intro
+
+MCP servers can provide three main types of capabilities:
+
+- Resources: File-like data that can be read by clients (like API responses or file contents)
+- Tools: Functions that can be called by the LLM (with user approval)
+- Prompts: Pre-written templates that help users accomplish specific tasks
+
+# Framework
+
+Use EasyMCP as a base : https://github.com/zcaceres/easy-mcp/

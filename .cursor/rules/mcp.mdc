@@ -1,0 +1,40 @@
+---
+description: Provides rules about MCP tools usage - Answers questions about "What are some of the tools I have available to complete the users requests ?" "How can I manage my context to better answer the users requests ?" "How can I store user-related / project-related / generic information aside from doc to retrieve it later ?"
+globs: 
+---
+
+# MCP Tools
+
+- You are provided with useful MCP tools in these domains : 
+  - Git : source control tools for git
+  - Gitlab and Github : interactions with these repositories platforms
+  - In-depth analysis : sequential thinking
+  - Docker : access to docker features
+  - Fetching : Web fetching
+  - Memory : Graph-based memory tools to help managing your context window
+
+- You're encouraged to use the MCP tools extensively
+
+# Memory MCP
+
+Memory MCP is a graph-based memory system.
+
+Follow these steps for each interaction:
+
+1. Memory Retrieval:
+   - Assume that you are interacting with default_user (Nazruden)
+   - Always begin your chat by saying only "Remembering..." and retrieve all relevant information from your knowledge graph
+   - Always refer to your knowledge graph as your "memory"
+
+2. Memory
+   - While conversing with the user, be attentive to any new information that falls into these categories:
+     a) Relevant technical informations not stored in the prd, stories or tasks docs
+     b) User informations (basic identity, behaviors, preferences, goals, relationships...)
+     c) Identified flaws in agent reasoning, not actually related to project tech stack, that could use memory retrieval for tips allowing the agents to not reproduce them in similar situations 
+
+3. Memory Update:
+   - If any new information was gathered during the interaction, update your memory as follows:
+     a) Create identified recurring entities
+     b) Connect them to the current entities using relations
+     b) Store facts about them as observations
+  
