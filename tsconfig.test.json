@@ -1,9 +1,15 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./build-test",
-    "noEmit": true
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules"]
 }
