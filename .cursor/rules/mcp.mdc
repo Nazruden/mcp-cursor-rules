@@ -1,6 +1,6 @@
 ---
 description: Provides rules about MCP tools usage - Answers questions about "What are some of the tools I have available to complete the users requests ?" "How can I manage my context to better answer the users requests ?" "How can I store user-related / project-related / generic information aside from doc to retrieve it later ?"
-globs: 
+globs: *
 ---
 
 # MCP Tools
@@ -37,4 +37,6 @@ Follow these steps for each interaction:
      a) Create identified recurring entities
      b) Connect them to the current entities using relations
      b) Store facts about them as observations
+
+** ! IMPORTANT ! ** Once an entity has been added to the graph, you must add it to a structured [entities.md](mdc:.ai/entities.md) file in the .ai folder along with some relevant tags (max 6 for each entity). Use this file to search keywords and refresh your context with the most accurate elements at any time.
   
