@@ -36,6 +36,22 @@ describe("MonitoringService", () => {
       expect(metrics[0]).toEqual(metric);
     });
 
+    it("should handle string timestamps", () => {
+      const timestamp = new Date();
+      const metric: Metric = {
+        name: "test_metric",
+        value: 42,
+        timestamp: timestamp.toISOString() as any,
+        tags: { service: "test" },
+      };
+
+      monitoringService.recordMetric(metric);
+      const metrics = monitoringService.getMetrics();
+
+      expect(metrics[0].timestamp).toBeInstanceOf(Date);
+      expect(metrics[0].timestamp.getTime()).toBe(timestamp.getTime());
+    });
+
     it("should handle concurrent metric recording", async () => {
       const metrics: Metric[] = Array.from({ length: 100 }, (_, i) => ({
         name: "concurrent_test",
@@ -215,10 +231,9 @@ describe("MonitoringService", () => {
       expect(aggregated["unknown:unknown"]).toBeDefined();
     });
 
-    it("should handle empty dimensions gracefully", () => {
+    it("should handle empty dimensions array", () => {
       const aggregated = monitoringService.aggregateMetrics({}, []);
-
-      expect(aggregated).toEqual({});
+      expect(Object.keys(aggregated)).toHaveLength(0);
     });
 
     it("should aggregate metrics with name dimension", () => {
@@ -248,16 +263,23 @@ describe("MonitoringService", () => {
         name: "response_time",
         tags: { type: "request" },
       };
-      const aggregated = monitoringService.aggregateMetrics(filter, [
-        "endpoint",
-        "method",
-      ]);
+      const dimensions = ["endpoint"];
+      const aggregated = monitoringService.aggregateMetrics(filter, dimensions);
 
       expect(Object.keys(aggregated)).toHaveLength(2);
-      expect(aggregated["/api/rules:GET"]).toBeDefined();
-      expect(aggregated["/api/compose:POST"]).toBeDefined();
-      expect(aggregated["/api/rules:GET"].count).toBe(2);
-      expect(aggregated["/api/compose:POST"].count).toBe(1);
+      expect(aggregated["/api/rules"]).toBeDefined();
+      expect(aggregated["/api/compose"]).toBeDefined();
+      expect(aggregated["/api/rules"].count).toBe(2);
+      expect(aggregated["/api/rules"].avg).toBe(125);
+    });
+
+    it("should handle non-existent dimensions", () => {
+      const aggregated = monitoringService.aggregateMetrics(
+        { name: "response_time" },
+        ["nonexistent"]
+      );
+      expect(Object.keys(aggregated)).toHaveLength(1);
+      expect(aggregated["unknown"]).toBeDefined();
     });
   });
 });

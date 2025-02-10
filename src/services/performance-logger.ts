@@ -56,24 +56,39 @@ export class PerformanceLogger {
   }
 
   private rotateLogFile(): void {
-    if (!fs.existsSync(this.currentLogFile)) {
-      return;
-    }
-
-    for (let i = this.maxFiles - 1; i > 0; i--) {
-      const oldFile = path.join(this.logDir, `performance.${i}.log`);
-      const newFile = path.join(this.logDir, `performance.${i + 1}.log`);
-
-      if (fs.existsSync(oldFile)) {
-        fs.renameSync(oldFile, newFile);
+    try {
+      if (!fs.existsSync(this.currentLogFile)) {
+        return;
       }
-    }
 
-    fs.renameSync(
-      this.currentLogFile,
-      path.join(this.logDir, "performance.1.log")
-    );
-    this.currentFileSize = 0;
+      for (let i = this.maxFiles - 1; i > 0; i--) {
+        const oldFile = path.join(this.logDir, `performance.${i}.log`);
+        const newFile = path.join(this.logDir, `performance.${i + 1}.log`);
+
+        if (fs.existsSync(oldFile)) {
+          try {
+            fs.renameSync(oldFile, newFile);
+          } catch (error) {
+            // Ignore rename errors for old files
+            console.error(`Error rotating log file ${oldFile}:`, error);
+          }
+        }
+      }
+
+      try {
+        fs.renameSync(
+          this.currentLogFile,
+          path.join(this.logDir, "performance.1.log")
+        );
+        this.currentFileSize = 0;
+      } catch (error) {
+        // If we can't rotate the current file, we'll continue writing to it
+        console.error("Error rotating current log file:", error);
+      }
+    } catch (error) {
+      // Log rotation failed, but we can continue
+      console.error("Log rotation failed:", error);
+    }
   }
 
   /**
@@ -83,22 +98,33 @@ export class PerformanceLogger {
    * @param metric Optional metric data
    */
   public log(level: LogLevel, message: string, metric: Metric): void {
-    const logEntry = {
-      timestamp: new Date().toISOString(),
-      level,
-      message,
-      metric,
-    };
+    try {
+      const logEntry = {
+        timestamp: new Date().toISOString(),
+        level,
+        message,
+        metric,
+      };
 
-    const logLine = JSON.stringify(logEntry) + "\n";
-    const lineSize = Buffer.from(logLine).length;
+      const logLine = JSON.stringify(logEntry) + "\n";
+      const lineSize = Buffer.from(logLine).length;
 
-    if (this.currentFileSize + lineSize > this.maxFileSize) {
-      this.rotateLogFile();
+      if (this.currentFileSize + lineSize > this.maxFileSize) {
+        this.rotateLogFile();
+      }
+
+      try {
+        fs.appendFileSync(this.currentLogFile, logLine);
+        this.currentFileSize += lineSize;
+      } catch (error) {
+        // If we can't write to the file, log to console as fallback
+        console.error("Error writing to log file:", error);
+        console.log(logLine); // Fallback to console
+      }
+    } catch (error) {
+      // Ensure logging never throws
+      console.error("Logging failed:", error);
     }
-
-    fs.appendFileSync(this.currentLogFile, logLine);
-    this.currentFileSize += lineSize;
   }
 
   public debug(message: string, metric: Metric): void {
