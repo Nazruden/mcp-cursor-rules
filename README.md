@@ -1,6 +1,112 @@
-# MCP Rules Server
+# MCP Cursor Rules Server
 
-A high-performance Model Context Protocol (MCP) server for managing agent rules, built with TypeScript and Node.js. This server provides efficient storage, retrieval, and management of cursor rules (.cursorrules and .mdc files) with persistent storage and caching capabilities.
+A high-performance Model Context Protocol (MCP) server for managing agent rules, built with TypeScript and Node.js. This server provides efficient storage, retrieval, and management of cursor rules (`.cursorrules` and `.mdc` files) with persistent storage and caching capabilities.
+
+## Features
+
+- FastMCP-based server implementation
+- PostgreSQL integration for rule storage
+- Smart rule fetching with relevance scoring
+- TypeScript support
+- Comprehensive test coverage
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- PostgreSQL (v12 or higher)
+- npm or yarn
+
+## Setup
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/mcp-cursor-rules.git
+   cd mcp-cursor-rules
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following content:
+
+   ```env
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=postgres
+   POSTGRES_HOST=localhost
+   POSTGRES_PORT=5432
+   POSTGRES_DB=mcp_rules
+   ```
+
+4. Create the database:
+
+   ```bash
+   createdb mcp_rules
+   ```
+
+5. Build the project:
+   ```bash
+   npm run build
+   ```
+
+## Running Tests
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+Run tests with coverage:
+
+```bash
+npm run test:coverage
+```
+
+## Running the Server
+
+Start the server in development mode:
+
+```bash
+npm run dev
+```
+
+Start the server in production mode:
+
+```bash
+npm start
+```
+
+## Available Tools
+
+### smart_fetch
+
+Intelligently fetches the most relevant rules based on search criteria.
+
+Parameters:
+
+- `tags`: Array of strings representing search tags
+
+Returns:
+
+- `cursorrules`: Base cursor rules file
+- `mdcFiles`: Array of relevant MDC files with relevance scores
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the ISC License.
 
 ## Client Integration
 

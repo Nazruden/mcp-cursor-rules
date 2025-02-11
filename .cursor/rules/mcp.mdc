@@ -14,6 +14,7 @@ globs: *
   - Memory : Graph-based memory tools to help managing your context window
 
 - You're encouraged to use the MCP tools extensively
+- Be careful with the path parameters of some tools - the operating system may imply the path pattern
 
 # Memory MCP
 

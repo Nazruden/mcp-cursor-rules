@@ -21,4 +21,4 @@ MCP servers can provide three main types of capabilities:
 
 # Framework
 
-Use FastMCP as a base : https://github.com/punkpeye/fastmcp
+Use FastMCP - a TypeScript framework for MCP servers - as a base : https://github.com/punkpeye/fastmcp

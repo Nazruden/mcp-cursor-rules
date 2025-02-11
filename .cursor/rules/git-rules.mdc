@@ -1,5 +1,5 @@
 ---
-description: Provides rules to help the AI with git operations - Answers questions like "How should commits be delivered ?" "What git tools should I use ?"
+description: Provides rules to help the AI with git operations - Answers questions like "How should commits be structured ?" "What git tools should I use ?" "Can you commit the changes ?"
 globs: 
 ---
 # Git Rules

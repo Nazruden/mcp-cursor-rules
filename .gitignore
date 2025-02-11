@@ -1,28 +1,33 @@
-# Node modules
+# Dependencies
 node_modules/
 
 # Build output
-build/
-build-test/
 dist/
 
-# Coverage directory from tests
+# Environment variables
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# Test coverage
 coverage/
 
 # Logs
 *.log
+npm-debug.log*
 
-# Environment files
-.env
-.env.local
-
-# IDEs and editors
-.vscode/
-.idea/
-
-# OS generated files
+# OS files
 .DS_Store
 Thumbs.db
+
+# Build output
+build/
+build-test/
+
+# Environment files
+.env.local
 
 # Temporary files
 *.swp
